@@ -1,0 +1,22 @@
+Currently perceived challenges in cue form
+
+- Online update of policies - feasible?
+  - could hash query/capabilities and permit policy changes that operate (exclusively) on existing data structures. This code would be uploaded to the RBAC domain.
+  - Allowing online updates could cause versioning issues with cached queries on the client sid
+  - could have domain unikernel send policy on boot, but that would allow compromised domains (ie hacked *nix domains) to upload code to the RBAC, so hardly advisable? (unless we sign the policy?)
+    - alternatively have the code that starts the domain from dom0 do it
+      - with this approach only client needs restarting
+
+- inter-domain trust? Allow one domain policy to query other domains?
+  - need to investigate benefits and implications of permitting this
+
+- Policy language
+  - Propose required operations
+  - Query "flags":
+    - Caching
+    - Logging?
+    - "Can I?" / Lookahead / "Don't Log"
+      - Semantic difference between inquiring about the legality of an action and performing it
+        - example: "can I edit this page" / "now I'm editing, here's the new content"
+        - Two different queries or add flag to query? (need to prevent code cloning, but may not want to log mere probes)
+

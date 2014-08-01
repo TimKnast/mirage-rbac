@@ -1,0 +1,11 @@
+== mirage-rbac
+A role based access control system that provides a centralized solution for logging and policy marshalling.
+The system is _cooperative_; the client domains query the RBAC for decisions and are expected to honor them, but the RBAC doesn't forcefully restrict actions inside the client domain.
+The system provides authentication services that domains can use to quickly and safely implement usernname/password-systems or authenticate users or remote servers based on public key cryptography.
+The system enables the clients to make _queries_, using parameterized variants, to which the system responds with a positive or negative boolean _decision_.
+The decisions are the outcome of domain _policies_, limited programs that compare queries to the capability set held by its current session and return a decision.
+Each policy item is called a [decision handler] and can be one of three types: 1) DSL/hosted code uploaded to the system 2) System-provided code, for authentication services etc.
+  3) Domain callbacks; code inside the domain that responds with (?data or a yes/no?) for the RBAC to consider
+A decision handler can issue queries of its own.
+
+

@@ -1,0 +1,37 @@
+E: Event
+C: Client
+R: RBAC System
+---
+E: User visits front page
+C: wiki opens an RBAC session for a role, "web visitor". Different roles may be used for different access points, such as web services or SSH-based management.
+R: Responds with an OK
+---
+E: The freshly opened session is in the default unauthenticated state "stateless", which is not tied to an identity.
+C: Applications can make do with one "stateless" session per role for unauthenticated use.
+---
+E: User visits frontpage
+C: RBAC hook in wiki code asks if user can view the page; sends the frontpage security classification along with the query:
+  ("can user view page?", {"classification": "public"})
+R: Executes decision handler which matches "public" against the capabilities granted to "web visitor"->"stateless" and confirms the query with an OK
+E: Wiki displays page to user
+---
+E: User clicks "edit page"
+C: Wiki sends query:
+  ("can edit page?", {"page":"frontpage","classification":"public","owner":"abbie"}
+R: System responds negatively after assessing that "stateless" isnt allowed to edit pages belonging to "abbie"
+---- q: how do we know what state we are in? assuming we do:
+C: Wiki displays login page to user
+---
+E: User submits {"user": "abbie", "pw": "lsd"}
+C: Wiki sends ("can i login?",{"user":"abbie", "pw": "lsd"})
+R: Executes builtin auth decision handler, determines the provided credentials are valid
+R: changes session identity to that of "abbie"
+R: changes session state to "logged in"
+R: responds positively to the login query
+---
+E: Wiki, now knowing that the login query went well, can conclude that it is now in state "logged in" (each query can result in exactly one other state than the current, on either a negative or positive decision)
+C: resubmits request to edit page
+R: handler can now correlate the query to the capability set of the "abbie" identity and decide that editing the frontpage is allowed
+---
+E: Wiki can choose to cache the decision and allow the user to edit the page, or choose to keep asking the RBAC system and save some memory instead.
+

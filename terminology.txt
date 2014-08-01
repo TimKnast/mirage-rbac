@@ -1,0 +1,45 @@
+Capabilities:
+  Named data structures used to determine if a
+  query is allowed. The capabilities available for a query is a function of Role, State and Identity
+
+Roles:
+  Templates for identities, describing which states and capabilities are available for an associated identity. Used to model ways that foreign entities can interact with the domain.
+Session State:
+  A subset of identity capabilities. Roles define states. A session starts in the default state "stateless" which must be defined for each role.
+Query:
+  A named data structure similar to a capability, sent to the RBAC system by the client domain
+Decision/Answer:
+  Boolean response to a query.
+Session: A communication channel between client domain and the RBAC system. Capability set determined by (State, Identity, Role)
+
+Hooks: 
+  Function calls inside modules or applications in client domain that query the RBAC system. Depending on the active policy they may be "optimized out"/ignored if policy explicitly permits it, or they can locally respond using cached queries
+
+PermanentCache:
+  Cache level that equals domain-wide OK+no-log so the hooks for this query can be optimized out entirely
+StateCache:
+  Cache decision until next state change
+IdentityCache:
+  Cache as long as this session is tied to this identity (logout -> stateless = clear cache)
+
+Log settings for each request as compiled into domain/RBAC by policy compiler
+LogPrincipal/LogFirst/LogInitial:
+  Log requests, but permit domain hooks to cache decisions if this flag is set (effectively logging only the principal query)
+LogAlways: 
+  Log all queries with this flag
+LogNegative/LogNo: Log only if decision is negative
+LogPositive/LogYes: Only log when decision is positive
+--- If decision handler for a given query refers to other queries (inline queries), then combine cache+loglevel settings recursively before allowing caching of this query. nb done at compile-time!
+Decision handler:
+  Boolean function that takes a query and a capability set as input and returns a decision. DHs can emit log entries, call other decision handlers inline, change session identity, change session state, update identity capabilities. Temporary updates can be apllied using the cache flags (ie if temporary vdata needs to be kept for key exchanges).
+Capability update:
+  Changes to capabilities are state-dependent and are applied to a set of states and can be permanent or have a limited lifetime/visibility: current state; set of states (must include current)
+
+Policy:
+  A dictionary mapping query name to decision handlers. TODO probably refers to much more.
+
+User:
+  A set of identities, can reference identities from separate domains. Used to tie app identities to physical user entities. Contains auth data for managing identities (changing app passwords etc), contact info etc
+- domain capability todo
+- plugin capability todo
+
