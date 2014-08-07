@@ -4,7 +4,7 @@ queries_and_capabilities =
 (  ("PageCaps", (* data model name *) 
     ViewPage | EditPage, (* query names using this model *),
     { ~query      owner: string;
-      ~capability no_pages_pending_review: 3;
+      ~capability:session no_pages_pending_review: 3;
                   level: Public | User | Admin;
                     (* default = both *)
     },
@@ -16,12 +16,18 @@ queries_and_capabilities =
      { ~capability allowed: bool; } )
 )
 
-States =
-|  Stateless: Login; ViewPage
-|  LoggedIn: ViewPage; EditPage; Logout
-|  Elevated: LoggedIn; Reboot
-     (* Elevated uses LoggedIn as alias; it just extends the set of allowed queries, but there is no inherent special relationship *)
-(* note: the set of queries associated with a given state since its defined in the application/client code. if you need to control individual identities' use of queries you should use ~capabily'es *)
+(*
+Data definitions specify which members are sent with the query by tagging with ~query. TODO "parameter"?
+If a member is stored as a capability, it is tagged with ~capability.
+Capabilities may be temporary (with a default value). The change lifetime / scope s prepended as a tag with ":", like "~capability:permanent", and can be one of:
+- permanent (default if no scope specified):
+    Changes are permanent and global.
+- session:
+    Changes are only visible in the current session and are forgotten when the session is terminated
+- state:
+    Changes are forgotten after each state transition (*TODO how does this impact query caching consistency?*
+- TODO: set of states?
+- TODO: "follow cache settings"?
+... locally scoped updates are provided to support local counters and temporary storage for decision handlers, for example challenge-response solutions and policy items that consider previous actions in their rulings.
+An example of the latter could be a policy that rate limits page views or edits.
 
-
-TODO find notes on state transitions, add comments and make writing understandable
