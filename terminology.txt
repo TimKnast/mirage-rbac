@@ -1,16 +1,16 @@
 Capabilities:
   Named data structures used to determine if a
-  query is allowed. The capabilities available for a query is a function of Role, State and Identity
+  query is allowed. The capabilities available for a query is a function of Capability Model, State and Identity
 
-Roles:
+Capability Models:
   Templates for identities, describing which states and capabilities are available for an associated identity. Used to model ways that foreign entities can interact with the domain.
 Session State:
-  A subset of identity capabilities. Roles define states. A session starts in the default state "stateless" which must be defined for each role.
+  A subset of identity capabilities. Capability Models define states. A session starts in the default state "stateless" which must be defined for each capability model.
 Query:
   A named data structure similar to a capability, sent to the RBAC system by the client domain
 Decision/Answer:
   Boolean response to a query.
-Session: A communication channel between client domain and the RBAC system. Capability set determined by (State, Identity, Role)
+Session: A communication channel between client domain and the RBAC system. Capability set determined by (State, Identity, Capability Model)
 
 Hooks: 
   Function calls inside modules or applications in client domain that query the RBAC system. Depending on the active policy they may be "optimized out"/ignored if policy explicitly permits it, or they can locally respond using cached queries

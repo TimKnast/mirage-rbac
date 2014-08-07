@@ -1,22 +1,10 @@
 Examples of proposed data structures and their use
-====
-Capability set:
-type page_cap_set = list of Owner | Classification
 
 ====
-Query:
-type page_query_data = {
-  Owner: identity_id,
-  Classification: Public
-                | User
-                | Admin
- ,PageId of int  # for logging
-}
-type query = ViewPage of page_query_data
-           | EditPage of page_query_data
-           | DeletePage of page_query_data
-====
 Identity:
+consists of an identifier (uint64?)
+and cow versions of capabilities as defined by the capability model
+- can also include special capabilities such as auth caps - need to come up with a way to configure this (which states can auth, what kind of cooperation do we need from client domain, should we do kerberos-like tickets, ... ) - apply rules before calling to enforce pw length, ..? - supply settings to auth framework - name for plugin ztuff?
 
 ====
 Hook:
@@ -28,6 +16,11 @@ States:
 Connection to RBAC:
 
 rbac_session WebVisitor
-  : Role -> <rbac session> abstract
+  : CapabilityModel -> <rbac session> abstract
 
+rbac_hook ViewPage page_data
+  : query -> page_query_data -> bool
+
+example:
+  rbac_hook EditPage (get_page_data page_id)
 

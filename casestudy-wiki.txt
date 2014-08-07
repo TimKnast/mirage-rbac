@@ -3,11 +3,11 @@ C: Client
 R: RBAC System
 ---
 E: User visits front page
-C: wiki opens an RBAC session for a role, "web visitor". Different roles may be used for different access points, such as web services or SSH-based management.
+C: wiki opens an RBAC session for a capability model, "web visitor". Different models may be used for different access points, such as web services or SSH-based management.
 R: Responds with an OK
 ---
 E: The freshly opened session is in the default unauthenticated state "stateless", which is not tied to an identity.
-C: Applications can make do with one "stateless" session per role for unauthenticated use.
+C: Applications can make do with one "stateless" session per capability model for unauthenticated use.
 ---
 E: User visits frontpage
 C: RBAC hook in wiki code asks if user can view the page; sends the frontpage security classification along with the query:
