@@ -1,0 +1,47 @@
+States / State Transitions / Query caching definition proposal
+
+(* note: the set of queries associated with a given state since its defined in the application/client code. if you need to control individual identities' use of queries you should use ~capabily'es *)
+
+States =
+|  Stateless: Login; ViewPage
+|  LoggedIn: ViewPage; EditPage; Logout
+|  Elevated: LoggedIn; Reboot
+     (* Elevated uses LoggedIn as alias; it just extends the set of allowed queries, but there is no inherent special relationship *)
+
+
+(* define which queries can alter state and what the resulting state is based on the rbac decision. The default is to stay in the current state. *)
+CapabilityModel.state_transitions =
+| Stateless -> Login (Positive -> LoggedIn )
+| (LoggedIn | Elevated) -> (
+    Logout(Stateless) (* both true/false *)
+  | EditPage( Negative -> Stateless
+            | Elevated ) 
+           (* ^-- change to elevated before editing a page if permitted to edit *)
+  )
+
+(* Validvalues for caching:
+ - Session: Cache for the remainder of the session (useful for public pages etc) - TODO "session" for Stateless ought to be global?
+ - Current: Alias for the current state (ONE; not the entire matching set)
+ - Set: A set of states in (s1 | s2) form. Transitions between the listed states do not clear the cache. "Current" is not implied, allowing exceptions to general definitions where a set of states has almost similar caching rules. <- TODO FIXME that part is unclear
+ - CurrentSet: Alias for a Set of the states matching this query caching rule. Equal to Current if there's only one matching state.
+*)
+CapabilityModel.query_caching =
+| (Stateless | LoggedIn ) -> (
+    Login( Session )
+  | ViewPage( Positive -> (
+           Current
+         | LoggedIn | Elevated) 
+      | Negative -> (Current | Stateless)
+    ) (* cache allowed when transitioning up and cache disallowed when losing privileges *)
+  )
+| Elevated -> (
+    EditPage( Negative -> Session )
+  | ViewPage( Negative -> Session )
+ (* ^-- TODO should we allow matching >1 query*)
+| (LoggedIn | Elevated) -> (
+    EditPage( Positive -> (Current|Elevated)
+            | Negative -> (Current|Stateless)
+    ) (* if a page can be edited in LoggedIn, it can also be edited in Elevated, but a page may be editable ONLY ahen Elevated. Additionally, if a page can't be edited as loggedin or elevated, it follows that it shouldnt be edited when unauthenticated either. *)
+  )
+
+
