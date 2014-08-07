@@ -1,0 +1,27 @@
+Proposal for Query / Capability specification
+
+queries_and_capabilities =
+(  ("PageCaps", (* data model name *) 
+    ViewPage | EditPage, (* query names using this model *),
+    { ~query      owner: string;
+      ~capability no_pages_pending_review: 3;
+                  level: Public | User | Admin;
+                    (* default = both *)
+    },
+   ),
+
+   ("NoData", Logout | KeepAlive, {} ),
+
+   ("RebootMachine", Reboot,
+     { ~capability allowed: bool; } )
+)
+
+States =
+|  Stateless: Login; ViewPage
+|  LoggedIn: ViewPage; EditPage; Logout
+|  Elevated: LoggedIn; Reboot
+     (* Elevated uses LoggedIn as alias; it just extends the set of allowed queries, but there is no inherent special relationship *)
+(* note: the set of queries associated with a given state since its defined in the application/client code. if you need to control individual identities' use of queries you should use ~capabily'es *)
+
+
+TODO find notes on state transitions, add comments and make writing understandable

@@ -1,0 +1,33 @@
+Examples of proposed data structures and their use
+====
+Capability set:
+type page_cap_set = list of Owner | Classification
+
+====
+Query:
+type page_query_data = {
+  Owner: identity_id,
+  Classification: Public
+                | User
+                | Admin
+ ,PageId of int  # for logging
+}
+type query = ViewPage of page_query_data
+           | EditPage of page_query_data
+           | DeletePage of page_query_data
+====
+Identity:
+
+====
+Hook:
+
+====
+States:
+
+====
+Connection to RBAC:
+
+rbac_session WebVisitor
+  : Role -> <rbac session> abstract
+
+
