@@ -1,0 +1,20 @@
+Ideas in cue form for useful plugins
+
+== Logging
+- use a definition similar to the unified Query / Capability definition to select a subset of query / capability dats to emit to the log.
+  - may want to combine several sets of unrelated capabilities (eg log username and user level along with attempted action)
+
+
+== Authentication
+- User/Password authentication
+  - Idea: Central rules for complexity, length?
+- Public Key authentication
+  - TLS / SSH client certs
+  - PGP challenge-response using signing
+- Tickets can be issued, Kerberos-style
+  - Useful for session cookies in HTTP
+  - Can have limited lifwtimes and limited allowed queries/states ("App" impersonation-style)
+- One-time passwords (like S/KEY)
+- OpenID / single sign-on solutions
+
+
