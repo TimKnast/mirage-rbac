@@ -7,14 +7,15 @@ Currently perceived challenges in cue form
     - alternatively have the code that starts the domain from dom0 do it
       - with this approach only client needs restarting
 
-- inter-domain trust? Allow one domain policy to query other domains?
+- Identity management external to domains
+  - Update authentication tokens, delete or create identities, ..?)
+
+- inter-domain trust? Allow one domain policy to query other domains? (mapping id<-> id using User record)
   - need to investigate benefits and implications of permitting this
 
 - Policy language
   - Propose required operations
   - Query "flags":
-    - Caching
-    - Logging?
     - "Can I?" / Lookahead / "Don't Log"
       - Semantic difference between inquiring about the legality of an action and performing it
         - example: "can I edit this page" / "now I'm editing, here's the new content"

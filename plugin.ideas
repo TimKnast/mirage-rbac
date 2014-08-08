@@ -1,7 +1,7 @@
 Ideas in cue form for useful plugins
 
 == Logging
-- use a definition similar to the unified Query / Capability definition to select a subset of query / capability dats to emit to the log.
+- use a definition similar to the unified Query / Capability definition to select a subset of query parameters / capability to emit to the log.
   - may want to combine several sets of unrelated capabilities (eg log username and user level along with attempted action)
 
 
