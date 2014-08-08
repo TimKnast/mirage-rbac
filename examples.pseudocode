@@ -10,11 +10,12 @@ and cow versions of capabilities as defined by the capability model
 Hook:
 
 rbac_hook : query -> page_query_data -> bool
-rbac_hook ViewPage page_data
-  : true
+match rbac_hook ViewPage (get_page_data page_id) with
+| true -> display_page page_id 
+| false -> display_page frontpage
 
 rbac_hook_may_change_state : query -> page_query_data -> ( bool * state * identity )
-rbac_hook EditPage (get_page_data page_id)
+rbac_hook EditPage page_query_data
   : (true, Elevated, 123)
 (* note that the state can be deduced by examining state transition declaration and returned decision, it's provided to add clarity and enable easy-to-read pattern matching. *)
 
