@@ -19,6 +19,9 @@ CapabilityModel.state_transitions =
            (* ^-- change to elevated before editing a page if permitted to edit *)
   )
 
+(* TODO consider mandatory explicit proofs of awareness from the user when a state transition may occur as the result of a query. e.g. by using a different hook name like "rbac_hook_may_change_state". We need to return the new state along with the boolean decision to allow pattern matching anyway. Will also need to return identity identifier. Tuple? (bool, state, identity)? (order after convenience TODO) *)
+
+
 (* Validvalues for caching:
  - Session: Cache for the remainder of the session (useful for public pages etc) - TODO "session" for Stateless ought to be global?
  - Current: Alias for the current state (ONE; not the entire matching set)
